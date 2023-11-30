@@ -1,6 +1,6 @@
 ﻿# Acoustic Space Improvements Patcher
 
-![image]('img/interior.jpg')
+![image](/img/interior.jpg)
 
 Forwards AcousticRecords from [Acoustic Space Improvements](https://www.nexusmods.com/skyrimspecialedition/mods/78992)
 to winning cell records.
