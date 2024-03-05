@@ -31,13 +31,27 @@ namespace AcousticSpaceImprovementsPatcher
             var masterCells = templateFixesEsp.Mod.Cells;
 
             // Check if cell acoustic template matches one in templatefixesesp otherwise deep copy and set in patcher
-            foreach (var cellBlockGetter in masterCells.Records) {
-                foreach (var cellSubBlock in cellBlockGetter.SubBlocks) {
-                    foreach (var cell in cellSubBlock.Cells) {
-                        if (!cell.ToLink().TryResolveContext<ISkyrimMod, ISkyrimModGetter, ICell, ICellGetter>(state.LinkCache, out var winningCellContext)) continue;
+            foreach (var masterCellBlockGetter in masterCells.Records) {
+                foreach (var masterCellSubBlock in masterCellBlockGetter.SubBlocks) {
+                    foreach (var templateFixesCell in masterCellSubBlock.Cells)
+                    {
+                        
+                        if (!templateFixesCell
+                                .ToLink()
+                                .TryResolveContext<ISkyrimMod, ISkyrimModGetter, ICell, ICellGetter>(
+                                    state.LinkCache,
+                                    out var winningCellContext)
+                           ) continue;
+
+                        // Don't patch if acoustic space matches existing
+                        if (templateFixesCell.AcousticSpace.Equals(winningCellContext.Record.AcousticSpace))
+                        {
+                            continue;
+                        }
+                        
                         var patchCell = winningCellContext.GetOrAddAsOverride(state.PatchMod);
-                        if (!cell.AcousticSpace.IsNull) {
-                            patchCell.AcousticSpace.FormKey = cell.AcousticSpace.FormKey;
+                        if (!templateFixesCell.AcousticSpace.IsNull) {
+                            patchCell.AcousticSpace.FormKey = templateFixesCell.AcousticSpace.FormKey;
                         }
                     }
                 }
